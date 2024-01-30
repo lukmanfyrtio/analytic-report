@@ -32,7 +32,7 @@ public class CustomDataUsageDAO {
     conn.setAutoCommit(false);
     try {
       PlanData planData = getPlanDataBySubscriberId(metricData.getApiId(), metricData.getApplicationId());
-      if (!"FREE".equalsIgnoreCase(planData.getBillingPlan())) {
+//      if (!"FREE".equalsIgnoreCase(planData.getBillingPlan())) {
         String insertQuery = "INSERT INTO DATA_USAGE_API (API_NAME, PROXY_RESPONSE_CODE, DESTINATION, API_CREATOR_TENANT_DOMAIN, PLATFORM, API_METHOD, API_VERSION, GATEWAY_TYPE, API_CREATOR, RESPONSE_CACHE_HIT, BACKEND_LATENCY, CORRELATION_ID, REQUEST_MEDIATION_LATENCY, KEY_TYPE, API_ID, APPLICATION_NAME, TARGET_RESPONSE_CODE, REQUEST_TIMESTAMP, APPLICATION_OWNER, USER_AGENT, EVENT_TYPE, API_RESOURCE_TEMPLATE, RESPONSE_LATENCY, REGION_ID, RESPONSE_MEDIATION_LATENCY, USER_IP, APPLICATION_ID, API_TYPE,SUBSCRIPTION_ID,SUBSCRIPTION_UUID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
         insertStmt.setString(1, metricData.getApiName());
@@ -72,7 +72,7 @@ public class CustomDataUsageDAO {
         conn.commit();
         insertStmt.close();
         log.debug("API Data Usage inserted successfully.");
-      } 
+//      } 
     } catch (SQLException e) {
       if (conn != null)
         try {
