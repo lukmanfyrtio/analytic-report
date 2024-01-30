@@ -79,6 +79,7 @@ public class LogCounterMetric implements CounterMetric {
       log.debug("API method ------- " + metricData.getApiMethod());
       log.debug("API version ------- " + metricData.getApiVersion());
       log.debug("user IP ------- " + metricData.getUserIp());
+      log.debug("Insert data to databases");
       this.customDataUsageDAO.addApiUsage(metricData);
     } catch (Exception e) {
       log.debug("Error when adding api usage to db : " + e.getMessage());
