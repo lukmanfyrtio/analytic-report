@@ -1,8 +1,7 @@
 package org.wso2.am.analytics.publisher.sample.reporter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.am.analytics.publisher.exception.MetricReportingException;
@@ -11,6 +10,8 @@ import org.wso2.am.analytics.publisher.reporter.MetricEventBuilder;
 import org.wso2.am.analytics.publisher.reporter.MetricSchema;
 import org.wso2.am.analytics.publisher.reporter.cloud.DefaultFaultMetricEventBuilder;
 import org.wso2.am.analytics.publisher.reporter.cloud.DefaultResponseMetricEventBuilder;
+
+import com.google.gson.Gson;
 
 public class LogCounterMetric implements CounterMetric {
   private static final Logger log = LoggerFactory.getLogger(LogCounterMetric.class);
@@ -34,7 +35,7 @@ public class LogCounterMetric implements CounterMetric {
     String jsonString = this.gson.toJson(event);
     log.info("apimMetrics: " + this.name.replaceAll("[\r\n]", "") + ", properties :" + jsonString
         .replaceAll("[\r\n]", ""));
-    ObjectMapper objectMapper = new ObjectMapper();
+//    ObjectMapper objectMapper = new ObjectMapper();
     try {
       MetricData metricData = new MetricData();
       metricData.setApiName((String)event.getOrDefault("apiName", ""));
@@ -72,14 +73,6 @@ public class LogCounterMetric implements CounterMetric {
       metricData.setErrorType((String)event.getOrDefault("errorType", ""));
       metricData.setErrorMessage((String)event.getOrDefault("errorMessage", ""));
       metricData.setErrorCode((String)event.getOrDefault("errorCode", ""));
-      log.debug("application name ------- " + metricData.getApplicationName());
-      log.debug("application id ------- " + metricData.getApplicationId());
-      log.debug("application owner ------- " + metricData.getApplicationOwner());
-      log.debug("destination ------- " + metricData.getDestination());
-      log.debug("API method ------- " + metricData.getApiMethod());
-      log.debug("API version ------- " + metricData.getApiVersion());
-      log.debug("user IP ------- " + metricData.getUserIp());
-      log.debug("Insert data to databases");
       this.customDataUsageDAO.addApiUsage(metricData);
     } catch (Exception e) {
       log.debug("Error when adding api usage to db : " + e.getMessage());

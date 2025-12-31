@@ -18,7 +18,7 @@ public class CustomDataUsageDAO {
   
   private static CustomDataUsageDAO INSTANCE = null;
   
-  public static final String GET_BE_PLAN_BY_SUBSCRIBED_ID_SQL = "SELECT ASN.SUBSCRIPTION_ID, ASN.UUID, APS.MONETIZATION_PLAN, APS.BILLING_CYCLE, APS.FIXED_RATE, APS.PRICE_PER_REQUEST, APS.CURRENCY, APS.BILLING_PLAN FROM AM_POLICY_SUBSCRIPTION APS JOIN AM_SUBSCRIPTION ASN ON ASN.TIER_ID = APS.NAME JOIN AM_API AA ON AA.API_ID = ASN.API_ID JOIN AM_APPLICATION APP ON APP.APPLICATION_ID = ASN.APPLICATION_ID WHERE AA.API_UUID = ? AND APP.UUID = ?";
+  public static final String GET_BE_PLAN_BY_SUBSCRIBED_ID_SQL = "SELECT ASN.SUBSCRIPTION_ID, ASN.UUID, APS.MONETIZATION_PLAN, APS.BILLING_CYCLE, APS.FIXED_RATE, APS.PRICE_PER_REQUEST, APS.CURRENCY, APS.BILLING_PLAN FROM WSO2AM_DB.AM_POLICY_SUBSCRIPTION APS JOIN AM_SUBSCRIPTION ASN ON ASN.TIER_ID = APS.NAME JOIN AM_API AA ON AA.API_ID = ASN.API_ID JOIN AM_APPLICATION APP ON APP.APPLICATION_ID = ASN.APPLICATION_ID WHERE AA.API_UUID = ? AND APP.UUID = ?";
   
   public static CustomDataUsageDAO getInstance() {
     if (INSTANCE == null)
@@ -32,7 +32,6 @@ public class CustomDataUsageDAO {
     conn.setAutoCommit(false);
     try {
       PlanData planData = getPlanDataBySubscriberId(metricData.getApiId(), metricData.getApplicationId());
-//      if (!"FREE".equalsIgnoreCase(planData.getBillingPlan())) {
         String insertQuery = "INSERT INTO DATA_USAGE_API (API_NAME, PROXY_RESPONSE_CODE, DESTINATION, API_CREATOR_TENANT_DOMAIN, PLATFORM, API_METHOD, API_VERSION, GATEWAY_TYPE, API_CREATOR, RESPONSE_CACHE_HIT, BACKEND_LATENCY, CORRELATION_ID, REQUEST_MEDIATION_LATENCY, KEY_TYPE, API_ID, APPLICATION_NAME, TARGET_RESPONSE_CODE, REQUEST_TIMESTAMP, APPLICATION_OWNER, USER_AGENT, EVENT_TYPE, API_RESOURCE_TEMPLATE, RESPONSE_LATENCY, REGION_ID, RESPONSE_MEDIATION_LATENCY, USER_IP, APPLICATION_ID, API_TYPE,SUBSCRIPTION_ID,SUBSCRIPTION_UUID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
         insertStmt.setString(1, metricData.getApiName());
@@ -53,9 +52,19 @@ public class CustomDataUsageDAO {
         insertStmt.setString(16, metricData.getApplicationName());
         insertStmt.setInt(17, metricData.getTargetResponseCode());
         Instant instant = Instant.parse(metricData.getRequestTimestamp());
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        insertStmt.setTimestamp(18, new Timestamp(date.getTime()));
+
+		// WIB zone
+		ZoneId wibZone = ZoneId.of("Asia/Jakarta");
+
+		// Konversi ke LocalDateTime WIB
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, wibZone);
+
+		// Konversi ke Timestamp (WIB)
+		Timestamp wibTimestamp = Timestamp.valueOf(localDateTime);
+
+		// Save ke DB
+		insertStmt.setTimestamp(18, wibTimestamp);
+
         insertStmt.setString(19, metricData.getApplicationOwner());
         insertStmt.setString(20, metricData.getUserAgent());
         insertStmt.setString(21, metricData.getEventType());
@@ -72,7 +81,6 @@ public class CustomDataUsageDAO {
         conn.commit();
         insertStmt.close();
         log.debug("API Data Usage inserted successfully.");
-//      } 
     } catch (SQLException e) {
       if (conn != null)
         try {
@@ -95,7 +103,7 @@ public class CustomDataUsageDAO {
     PreparedStatement ps = null;
     ResultSet result = null;
     PlanData monetizedSubscription = new PlanData();
-    String sqlQuery = "SELECT ASN.SUBSCRIPTION_ID, ASN.UUID, APS.MONETIZATION_PLAN, APS.BILLING_CYCLE, APS.FIXED_RATE, APS.PRICE_PER_REQUEST, APS.CURRENCY, APS.BILLING_PLAN FROM AM_POLICY_SUBSCRIPTION APS JOIN AM_SUBSCRIPTION ASN ON ASN.TIER_ID = APS.NAME JOIN AM_API AA ON AA.API_ID = ASN.API_ID JOIN AM_APPLICATION APP ON APP.APPLICATION_ID = ASN.APPLICATION_ID WHERE AA.API_UUID = ? AND APP.UUID = ?";
+    String sqlQuery = "SELECT ASN.SUBSCRIPTION_ID, ASN.UUID, APS.MONETIZATION_PLAN, APS.BILLING_CYCLE, APS.FIXED_RATE, APS.PRICE_PER_REQUEST, APS.CURRENCY, APS.BILLING_PLAN FROM WSO2AM_DB.AM_POLICY_SUBSCRIPTION APS JOIN AM_SUBSCRIPTION ASN ON ASN.TIER_ID = APS.NAME JOIN AM_API AA ON AA.API_ID = ASN.API_ID JOIN AM_APPLICATION APP ON APP.APPLICATION_ID = ASN.APPLICATION_ID WHERE AA.API_UUID = ? AND APP.UUID = ?";
     try {
       conn = APIMgtDBUtil.getConnection();
       ps = conn.prepareStatement(sqlQuery);
@@ -116,7 +124,7 @@ public class CustomDataUsageDAO {
         monetizedSubscription.setBillingPlan(result.getString("BILLING_PLAN"));
       } 
     } catch (SQLException e) {
-      String errorMessage = "Failed to get billing engine Subscription info for API ID : " + string;
+      String errorMessage = "Failed to get billing engine Subscription info for API ID : " + string +" details:"+e.getMessage();
       log.error(errorMessage);
       throw new Exception(errorMessage, e);
     } finally {

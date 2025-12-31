@@ -10,6 +10,7 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/axis2/axis2-kernel/1.6.1-wso2v40/axis2-kernel-1.6.1-wso2v40.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/geronimo/specs/geronimo-ws-metadata_2.0_spec/1.1.2/geronimo-ws-metadata_2.0_spec-1.1.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/neethi/neethi/2.0.4/neethi-2.0.4.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/javax/ws/rs/jsr311-api/1.0/jsr311-api-1.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/ops4j/pax/logging/pax-logging-api/1.10.1/pax-logging-api-1.10.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/wso2/carbon/analytics-common/org.wso2.carbon.event.output.adapter.sms/5.2.41/org.wso2.carbon.event.output.adapter.sms-5.2.41.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar" enabled="true" runInBatchMode="false"/>
@@ -106,7 +107,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/codehaus/jackson/jackson-mapper-asl/1.9.9/jackson-mapper-asl-1.9.9.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/codehaus/jackson/jackson-core-asl/1.9.9/jackson-core-asl-1.9.9.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/codemodel/codemodel/2.4.1/codemodel-2.4.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/localizer/localizer/1.0/localizer-1.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/localizer/comresrcgen/1.0/comresrcgen-1.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/jersey/jersey-client/1.12/jersey-client-1.12.jar" enabled="true" runInBatchMode="false"/>
